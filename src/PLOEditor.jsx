@@ -1,10 +1,5 @@
 import React, { useState } from "react";
 import * as XLSX from "xlsx";
-import { Button } from "../components/ui/button";
-import { Input } from "../components/ui/input";
-import { Dialog, DialogTrigger, DialogContent } from "../components/ui/dialog";
-import { Label } from "../components/ui/label";
-import { Textarea } from "../components/ui/textarea";
 
 export default function PLOEditor() {
   const [plos, setPlos] = useState([]);
@@ -56,54 +51,74 @@ export default function PLOEditor() {
   return (
     <div className="p-6 max-w-3xl mx-auto">
       <h1 className="text-2xl font-bold mb-4">PLO Editor</h1>
-      <Input type="file" accept=".xlsx, .xls" onChange={handleFileUpload} className="mb-4" />
+      <input
+        type="file"
+        accept=".xlsx, .xls"
+        onChange={handleFileUpload}
+        className="mb-4 block border p-2 rounded"
+      />
 
       {plos.length > 0 && (
         <div className="space-y-4">
           {plos.map((item) => (
-            <div key={item.id} className="p-4 border rounded-xl shadow-sm flex justify-between items-center">
+            <div
+              key={item.id}
+              className="p-4 border rounded-xl shadow-sm flex justify-between items-center"
+            >
               <div>
                 <div className="font-semibold">PLO: {item.plo}</div>
                 <div className="text-sm text-gray-500">Short Term: {item.shortTerm}</div>
               </div>
               <div className="space-x-2">
-                <Dialog>
-                  <DialogTrigger asChild>
-                    <Button variant="outline" onClick={() => openEditDialog(item)}>Edit</Button>
-                  </DialogTrigger>
-                  {editingItem && editingItem.id === item.id && (
-                    <DialogContent className="space-y-4">
-                      <div>
-                        <Label htmlFor="plo">Edit PLO</Label>
-                        <Textarea
-                          id="plo"
-                          value={editedPLO}
-                          onChange={(e) => setEditedPLO(e.target.value)}
-                        />
-                      </div>
-                      <div>
-                        <Label htmlFor="shortTerm">Edit Short Term</Label>
-                        <Textarea
-                          id="shortTerm"
-                          value={editedShortTerm}
-                          onChange={(e) => setEditedShortTerm(e.target.value)}
-                        />
-                      </div>
-                      <div className="flex justify-end space-x-2">
-                        <Button variant="default" onClick={saveEdit}>
-                          Save
-                        </Button>
-                        <Button variant="ghost" onClick={() => setEditingItem(null)}>
-                          Cancel
-                        </Button>
-                      </div>
-                    </DialogContent>
-                  )}
-                </Dialog>
-                <Button variant="destructive" onClick={() => handleDelete(item.id)}>Delete</Button>
+                <button
+                  className="px-4 py-2 bg-blue-600 text-white rounded"
+                  onClick={() => openEditDialog(item)}
+                >
+                  Edit
+                </button>
+                <button
+                  className="px-4 py-2 bg-red-600 text-white rounded"
+                  onClick={() => handleDelete(item.id)}
+                >
+                  Delete
+                </button>
               </div>
             </div>
           ))}
+        </div>
+      )}
+
+      {editingItem && (
+        <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
+            <h2 className="text-xl font-semibold mb-4">Edit PLO</h2>
+            <label className="block mb-2 font-medium">PLO</label>
+            <textarea
+              className="w-full border p-2 rounded mb-4"
+              value={editedPLO}
+              onChange={(e) => setEditedPLO(e.target.value)}
+            />
+            <label className="block mb-2 font-medium">Short Term</label>
+            <textarea
+              className="w-full border p-2 rounded mb-4"
+              value={editedShortTerm}
+              onChange={(e) => setEditedShortTerm(e.target.value)}
+            />
+            <div className="flex justify-end space-x-2">
+              <button
+                className="px-4 py-2 bg-blue-600 text-white rounded"
+                onClick={saveEdit}
+              >
+                Save
+              </button>
+              <button
+                className="px-4 py-2 bg-gray-300 text-black rounded"
+                onClick={() => setEditingItem(null)}
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>
